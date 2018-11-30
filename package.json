@@ -1,0 +1,33 @@
+{
+  "name": "simple-player",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "start": "rollup -c --watch",
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts --timeout 5000",
+    "watch-test": "nodemon --exec yarn wt",
+    "wt": "mocha -r ts-node/register tests/**/*.spec.ts --watch --watch-extensions ts --timeout 5000 --no-cache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/N0ise1ess/simple-player.git"
+  },
+  "author": "N0ise1ess",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/N0ise1ess/simple-player/issues"
+  },
+  "homepage": "https://github.com/N0ise1ess/simple-player#readme",
+  "dependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "rollup": "^0.67.3",
+    "rollup-plugin-typescript2": "^0.18.0",
+    "rollup-plugin-uglify": "^6.0.0",
+    "typescript": "^3.2.1"
+  }
+}

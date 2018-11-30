@@ -1,0 +1,12 @@
+
+\.rpt2_cache/rpt2_0594dae191db094f88412bfafe49478ec53a90d7/code/cache/
+
+\.rpt2_cache/rpt2_0594dae191db094f88412bfafe49478ec53a90d7/semanticDiagnostics/cache/
+
+\.rpt2_cache/
+
+dist/
+
+node_modules/
+
+*.lock
