@@ -8,18 +8,22 @@ export default class Player implements IPlayer {
     private _gainNode: any;
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
+    private _volume = 50 as number;
 
     private MAX_VALUE_VOLUME = 100;
 
     /**
      * 
-     * @param context AudioContext | webkitAudioContext
-     * @param data Audio content
+     * @param context AudioContext | webkitAudioContext.
      */
     constructor(context: AudioContext) {
         this._context = context;
     }
 
+    /**
+     * 
+     * @param data Audio content
+     */
     public setData = async (data: any) => {
         this._buffer = await new Buffer(this._context, data).getBuffer();
     } 
@@ -27,13 +31,8 @@ export default class Player implements IPlayer {
     public play = () => {
         try {
             this.init();
-            if(this._pausedAt === 0) {
-                this._startedAt = Date.now();
-                this._source.start(0) 
-            } else {
-                this._startedAt = Date.now() - this._pausedAt;
-                this._source.start(0, this._pausedAt / 1000);
-            } 
+            this._startedAt = Date.now() - this._pausedAt;
+            this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
         } catch(e) {
             throw new Error(e);
         }
@@ -50,15 +49,19 @@ export default class Player implements IPlayer {
         this.stopTrack();
     }
 
-    public changeVolume = (value: number) => {
-        var fraction = value / this.MAX_VALUE_VOLUME;
+    public changeVolume = (value: number = 50) => {
+        this._volume = value;
+        const fraction = value / this.MAX_VALUE_VOLUME;
         this._gainNode.gain.value = fraction * fraction;
     };
 
     private init = () => {
+        this._gainNode = this._context.createGain();
         this._source =  this._context.createBufferSource();
-        this._source.connect( this._context.destination);
+        this._source.connect( this._gainNode);
+        this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
+        this.changeVolume(this._volume);
 
         if (!this._source.start) this._source.start = this._source.noteOn;
     }
