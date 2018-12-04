@@ -1,5 +1,5 @@
 interface IBuffer {
-    buffer(): any
+    getBuffer(): any
 }
 
 export default IBuffer;
