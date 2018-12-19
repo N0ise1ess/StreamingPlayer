@@ -9,6 +9,7 @@
  *     var context = new AudioContext();
  */
 interface AudioContext {
+    state: string;
     /**
      * An AudioDestinationNode with a single input representing the final destination for all audio (to be rendered to the audio hardware). All AudioNodes actively rendering audio will directly or indirectly connect to destination.
      */

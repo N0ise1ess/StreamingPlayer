@@ -8,9 +8,9 @@ export default class Player implements IPlayer {
     private _gainNode: any;
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
-    private _volume = 50 as number;
+    private _volume = 100 as number;
 
-    private MAX_VALUE_VOLUME = 100;
+    private MAX_VALUE_VOLUME = 200;
 
     /**
      * 
@@ -28,7 +28,7 @@ export default class Player implements IPlayer {
         this._buffer = await new Buffer(this._context, data).getBuffer();
     } 
     
-    public play = () => {
+    public play = (value?: number) => {
         try {
             this.init();
             this._startedAt = Date.now() - this._pausedAt;
@@ -48,12 +48,29 @@ export default class Player implements IPlayer {
         this._startedAt = 0;
         this.stopTrack();
     }
-
-    public changeVolume = (value: number = 50) => {
+    
+    /**
+     *  @param value 0-200 
+     */
+    public changeVolume = (value: number = 100) => {
         this._volume = value;
         const fraction = value / this.MAX_VALUE_VOLUME;
         this._gainNode.gain.value = fraction * fraction;
     };
+
+    /**
+     * 
+     * @param value seconds
+     */
+    public changeTime(value: string) {
+        try {
+            this._pausedAt = Date.now() - this._startedAt + parseInt(value)*1000;
+            this.stopTrack();
+            this.play();
+        } catch(e) {
+            throw new Error(e);
+        }
+    }
 
     private init = () => {
         this._gainNode = this._context.createGain();
@@ -70,6 +87,10 @@ export default class Player implements IPlayer {
         if (!this._source.stop) this._source.stop = this._source.noteOff;
         
         this._source.stop(0);
+    }
+
+    set Context(value: AudioContext) {
+        this._context = value;
     }
 
     get Buffer():AudioBuffer {
