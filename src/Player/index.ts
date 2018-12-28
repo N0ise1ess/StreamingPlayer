@@ -2,11 +2,11 @@ import Buffer from '../Buffer';
 import IPlayer from './IPlayer';
 
 export default class Player implements IPlayer {
-    private _context: AudioContext;
+    protected  _context: AudioContext;
     private _source: any;
     private _buffer: any;
     private _gainNode: any;
-    private _filter = {} as BiquadFilterNode;
+    // private _filter = {} as BiquadFilterNode;
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
     private _volume = 100 as number;
@@ -19,7 +19,7 @@ export default class Player implements IPlayer {
      */
     constructor(context: AudioContext) {
         this._context = context;
-        this._filter = context.createBiquadFilter();
+        // this._filter = context.createBiquadFilter();
     }
 
     /**
@@ -69,28 +69,28 @@ export default class Player implements IPlayer {
         }
     }
 
-    public changeFilterValue(value: number) {
-        try {
-            var minValue = 40;
-            var maxValue = this._context.sampleRate / 2;
-            var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
-            var multiplier = Math.pow(2, numberOfOctaves * (value - 1.0));
-            this._filter.frequency.value = maxValue * multiplier;
-        } catch(e) {
-            throw new Error(e);
-        }
-    }
+    // public changeFilterValue(value: number) {
+    //     try {
+    //         var minValue = 40;
+    //         var maxValue = this._context.sampleRate / 2;
+    //         var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
+    //         var multiplier = Math.pow(2, numberOfOctaves * (value - 1.0));
+    //         this._filter.frequency.value = maxValue * multiplier;
+    //     } catch(e) {
+    //         throw new Error(e);
+    //     }
+    // }
 
     private initSource = () => {
         this._gainNode = this._context.createGain();
         this._source =  this._context.createBufferSource();
-        this._filter.frequency.value = 5000;
+        // this._filter.frequency.value = 5000;
         this._source.connect(this._gainNode);
-        this._source.connect(this._filter);
+        // this._source.connect(this._filter);
         this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
         this.changeVolume(this._volume);
-        this._filter.connect(this._context.destination);
+        // this._filter.connect(this._context.destination);
 
         if (!this._source.start) this._source.start = this._source.noteOn;
     }
@@ -111,30 +111,34 @@ export default class Player implements IPlayer {
     /**
      * @param value Type filter
      */
-    set TypeFilter(value: BiquadFilterType) {
-        if(typeof this._filter.type === 'string') this._filter.type = value;
-    }
+    // public set TypeFilter(value: BiquadFilterType) {
+    //     if(typeof this._filter.type === 'string') this._filter.type = value;
+    // }
 
     /**
      * @param value set context
      */
-    set Context(value: AudioContext) {
+    public set Context(value: AudioContext) {
         this._context = value;
     }
 
-    get Buffer():AudioBuffer {
+    public get Context() {
+        return this._context;
+    }
+
+    public get Buffer():AudioBuffer {
         return this._buffer;
     }
 
-    get Source(): any {
+    public get Source(): any {
         return this._source;
     }
 
-    get CurrentTimeBuffer(): number {
+    public get CurrentTimeBuffer(): number {
         return Date.now() - this._startedAt;
     }
 
-    get DurationBuffer(): number {
+    public get DurationBuffer(): number {
         return this._buffer && this._buffer.duration;
     }
 }
