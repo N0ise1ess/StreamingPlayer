@@ -3,6 +3,7 @@ import IPlayer from './IPlayer';
 
 export default class Player implements IPlayer {
     protected  _context: AudioContext;
+    
     private _source: any;
     private _buffer: any;
     private _gainNode: any;

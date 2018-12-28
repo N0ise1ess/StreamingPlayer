@@ -12,11 +12,14 @@ export default class Main extends Player implements IMain {
         super(context);
     }
 
-    private createFilter = (option: IOptions) => new Filter(this._context, option);
-
     public createStandartFilters() {
-        this._filters = configStandartFilters.map(item => this.createFilter(item))
+        this._filters = configStandartFilters.map((option: IOptions) => new Filter(this._context, option))
     }
 
-    
+    public createFilter = (option: IOptions) => this._filters.push(new Filter(this._context, option))
+
+    public get Filters() {
+        return this._filters;
+    }
+
 }
