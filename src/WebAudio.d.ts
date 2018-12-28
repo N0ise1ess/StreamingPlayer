@@ -925,7 +925,7 @@ declare enum BiquadFilterType {
      * ## gain
      * Not used in this filter type
      */
-    lowpass,
+    lowpass = 'lowpass',
 
     /**
      * A highpass filter is the opposite of a lowpass filter. Frequencies above the cutoff frequency are passed through, but frequencies below the cutoff are attenuated. It implements a standard second-order resonant highpass filter with 12dB/octave rolloff.
@@ -937,7 +937,7 @@ declare enum BiquadFilterType {
      * ## gain
      * Not used in this filter type
      */
-    highpass,
+    highpass = 'highpass',
 
     /**
      * A bandpass filter allows a range of frequencies to pass through and attenuates the frequencies below and above this frequency range. It implements a second-order bandpass filter.
@@ -949,7 +949,7 @@ declare enum BiquadFilterType {
      * ## gain
      * Not used in this filter type
      */
-    bandpass,
+    bandpass = 'bandpass',
 
     /**
      * The lowshelf filter allows all frequencies through, but adds a boost (or attenuation) to the lower frequencies. It implements a second-order lowshelf filter.
@@ -961,7 +961,7 @@ declare enum BiquadFilterType {
      * ## gain
      * The boost, in dB, to be applied. If the value is negative, the frequencies are attenuated.
      */
-    lowshelf,
+    lowshelf = 'lowshelf',
 
     /**
      * The highshelf filter is the opposite of the lowshelf filter and allows all frequencies through, but adds a boost to the higher frequencies. It implements a second-order highshelf filter
@@ -973,7 +973,7 @@ declare enum BiquadFilterType {
      * ## gain
      * The boost, in dB, to be applied. If the value is negative, the frequencies are attenuated.
      */
-    highshelf,
+    highshelf = 'highshelf',
 
     /**
      * The peaking filter allows all frequencies through, but adds a boost (or attenuation) to a range of frequencies.
@@ -985,7 +985,7 @@ declare enum BiquadFilterType {
      * ## gain
      * The boost, in dB, to be applied. If the value is negative, the frequencies are attenuated.
      */
-    peaking,
+    peaking = 'peaking',
 
     /**
      * The notch filter (also known as a band-stop or band-rejection filter) is the opposite of a bandpass filter. It allows all frequencies through, except for a set of frequencies.
@@ -997,7 +997,7 @@ declare enum BiquadFilterType {
      * ## gain
      * Not used in this filter type.
      */
-    notch,
+    notch = 'notch',
 
     /**
      * An allpass filter allows all frequencies through, but changes the phase relationship between the various frequencies. It implements a second-order allpass filter
@@ -1009,7 +1009,7 @@ declare enum BiquadFilterType {
      * ## gain
      * Not used in this filter type.
      */
-    allpass
+    allpass = 'allpass'
 }
 
 /**

@@ -2,8 +2,9 @@ import Buffer from '../Buffer';
 import IPlayer from './IPlayer';
 
 export default class Player implements IPlayer {
-    public _context: AudioContext;
-    public _source: any;
+    protected  _context: AudioContext;
+    protected _source: any;
+
     private _buffer: any;
     private _gainNode: any;
     private _pausedAt = 0 as any;
@@ -21,16 +22,11 @@ export default class Player implements IPlayer {
     }
 
     /**
-     * 
-     * @param data Audio content
+     * @param value? time start
      */
-    public setData = async (data: any) => {
-        this._buffer = await new Buffer(this._context, data).getBuffer();
-    } 
-    
-    public play = (value?: number) => {
+    public play(value?: number) {
         try {
-            this.init();
+            this.initSource();
             this._startedAt = Date.now() - this._pausedAt;
             this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
         } catch(e) {
@@ -72,10 +68,10 @@ export default class Player implements IPlayer {
         }
     }
 
-    private init = () => {
+    protected initSource() {
         this._gainNode = this._context.createGain();
         this._source =  this._context.createBufferSource();
-        this._source.connect( this._gainNode);
+        this._source.connect(this._gainNode);
         this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
         this.changeVolume(this._volume);
@@ -89,15 +85,44 @@ export default class Player implements IPlayer {
         this._source.stop(0);
     }
 
-    set Context(value: AudioContext) {
+    /**
+     * @param data Audio content
+     */
+    public async setData(data: ArrayBuffer) {
+        this._buffer = await new Buffer(this._context, data).getBuffer();
+    }    
+    
+    /**
+     * @param value Type filter
+     */
+    // public set TypeFilter(value: BiquadFilterType) {
+    //     if(typeof this._filter.type === 'string') this._filter.type = value;
+    // }
+
+    /**
+     * @param value set context
+     */
+    public set Context(value: AudioContext) {
         this._context = value;
     }
 
-    get Buffer():AudioBuffer {
+    public get Context() {
+        return this._context;
+    }
+
+    public get Buffer():AudioBuffer {
         return this._buffer;
     }
 
-    get Source(): any {
+    public get Source(): any {
         return this._source;
+    }
+
+    public get CurrentTimeBuffer(): number {
+        return Date.now() - this._startedAt;
+    }
+
+    public get DurationBuffer(): number {
+        return this._buffer && this._buffer.duration;
     }
 }

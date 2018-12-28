@@ -1,3 +1,3 @@
-import Player from './Player';
+import Main from "./MainPlayer";
 
-export default Player;
+export default Main;

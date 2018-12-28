@@ -10,7 +10,7 @@ export default class Buffer implements IBuffer {
      * @param context AudioContext | webkitAudioContext
      * @param content Audio content
      */
-    constructor(context: AudioContext, content: any) {
+    constructor(context: AudioContext, content: ArrayBuffer) {
         this._context = context;
         this._content = content;
     }
