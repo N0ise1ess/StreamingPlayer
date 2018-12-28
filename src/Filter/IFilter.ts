@@ -1,6 +1,5 @@
 export default interface IFilter {
     [x: string]: any;
-
 }
 
 export interface IOptions {

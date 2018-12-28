@@ -7,7 +7,6 @@ export default class Player implements IPlayer {
 
     private _buffer: any;
     private _gainNode: any;
-    // private _filter = {} as BiquadFilterNode;
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
     private _volume = 100 as number;
@@ -20,7 +19,6 @@ export default class Player implements IPlayer {
      */
     constructor(context: AudioContext) {
         this._context = context;
-        // this._filter = context.createBiquadFilter();
     }
 
     /**
@@ -69,18 +67,6 @@ export default class Player implements IPlayer {
             throw new Error(e);
         }
     }
-
-    // public changeFilterValue(value: number) {
-    //     try {
-    //         var minValue = 40;
-    //         var maxValue = this._context.sampleRate / 2;
-    //         var numberOfOctaves = Math.log(maxValue / minValue) / Math.LN2;
-    //         var multiplier = Math.pow(2, numberOfOctaves * (value - 1.0));
-    //         this._filter.frequency.value = maxValue * multiplier;
-    //     } catch(e) {
-    //         throw new Error(e);
-    //     }
-    // }
 
     protected initSource() {
         this._gainNode = this._context.createGain();

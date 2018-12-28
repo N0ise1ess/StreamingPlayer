@@ -27,7 +27,7 @@ export default class MainPlayer extends Player implements IMain {
     public createFilter = (option: IOptions) => this._filters.push(new Filter(this._context, option));
 
     public get Filters() {
-        return this._filters;
+        return this._filters.map(filter => filter);
     }
 
 }
