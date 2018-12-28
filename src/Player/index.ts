@@ -3,8 +3,8 @@ import IPlayer from './IPlayer';
 
 export default class Player implements IPlayer {
     protected  _context: AudioContext;
-    
-    private _source: any;
+    protected _source: any;
+
     private _buffer: any;
     private _gainNode: any;
     // private _filter = {} as BiquadFilterNode;
@@ -26,7 +26,7 @@ export default class Player implements IPlayer {
     /**
      * @param value? time start
      */
-    public play = (value?: number) => {
+    public play(value?: number) {
         try {
             this.initSource();
             this._startedAt = Date.now() - this._pausedAt;
@@ -82,16 +82,13 @@ export default class Player implements IPlayer {
     //     }
     // }
 
-    private initSource = () => {
+    protected initSource() {
         this._gainNode = this._context.createGain();
         this._source =  this._context.createBufferSource();
-        // this._filter.frequency.value = 5000;
         this._source.connect(this._gainNode);
-        // this._source.connect(this._filter);
         this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
         this.changeVolume(this._volume);
-        // this._filter.connect(this._context.destination);
 
         if (!this._source.start) this._source.start = this._source.noteOn;
     }
