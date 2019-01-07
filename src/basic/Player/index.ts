@@ -1,4 +1,4 @@
-import Player from '../Player';
+import Player from '../BasicPlayer';
 import Filter from '../Filter';
 import IMain from './IMain';
 import configStandartFilters from './configStandartFilters';
