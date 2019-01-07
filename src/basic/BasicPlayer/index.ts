@@ -1,7 +1,7 @@
 import Buffer from '../Buffer';
 import IPlayer from './IPlayer';
 
-export default class Player implements IPlayer {
+export default class BasicPlayer implements IPlayer {
     protected  _context: AudioContext;
     protected _source: any;
 

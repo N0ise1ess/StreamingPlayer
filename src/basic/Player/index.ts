@@ -1,10 +1,10 @@
-import Player from '../BasicPlayer';
+import BasicPlayer from '../BasicPlayer';
 import Filter from '../Filter';
-import IMain from './IMain';
+import IPlayer from './IPlayer';
 import configStandartFilters from './configStandartFilters';
 import IFilter, { IOptions } from '../Filter/IFilter';
 
-export default class MainPlayer extends Player implements IMain {
+export default class Player extends BasicPlayer implements IPlayer {
 
     private _filters = [] as IFilter[];
 
