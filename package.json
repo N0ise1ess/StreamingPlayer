@@ -22,8 +22,10 @@
   "homepage": "https://github.com/N0ise1ess/simple-player#readme",
   "dependencies": {
     "@types/chai": "^4.1.7",
+    "@types/isomorphic-fetch": "^0.0.34",
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
+    "isomorphic-fetch": "^2.2.1",
     "mocha": "^5.2.0",
     "rollup": "^0.67.3",
     "rollup-plugin-typescript2": "^0.18.0",

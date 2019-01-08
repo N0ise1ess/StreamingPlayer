@@ -1,7 +1,14 @@
 import { IOptions } from "../Filter/IFilter";
 
-export default interface IMain {
+export default interface IPlayer {
+    stop(): any;
+    play(): any;
+    setData(buffer: ArrayBuffer): any;
     Filters: any;
+    DurationBuffer: any;
+    CurrentTimeBuffer: any;
+    Source: any;
+    Buffer: any;
     createStandartFilters(): any;
     createFilter(option: IOptions): any;
 } 
