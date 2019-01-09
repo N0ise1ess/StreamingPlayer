@@ -3,7 +3,7 @@ import { IOptions } from "../Filter/IFilter";
 export default interface IPlayer {
     pause(): any;
     stop(): any;
-    play(): any;
+    play(value?: number): any;
     setData(buffer: ArrayBuffer): any;
     Filters: any;
     DurationBuffer: any;

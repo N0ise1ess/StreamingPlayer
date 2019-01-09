@@ -57,7 +57,7 @@ export default class StreamingPlayer implements IStreamingPlayer {
         const data = this._bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0));
         await this._player.setData(data);
         this._player.pause();
-        this._player.play();
+        this._player.play(0.2);
     }, 1000);
 
     public createFilter = (option: IOptions) => this._player.createFilter(option);

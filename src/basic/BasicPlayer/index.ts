@@ -30,6 +30,7 @@ export default class BasicPlayer implements IPlayer {
         try {
             this.initSource();
             this._startedAt = Date.now() - this._pausedAt;
+            if(value) this._startedAt -= value;    
             this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
         } catch(e) {
             throw new Error(e);
