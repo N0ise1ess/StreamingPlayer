@@ -1,6 +1,7 @@
 import { IOptions } from "../Filter/IFilter";
 
 export default interface IPlayer {
+    pause(): any;
     stop(): any;
     play(): any;
     setData(buffer: ArrayBuffer): any;

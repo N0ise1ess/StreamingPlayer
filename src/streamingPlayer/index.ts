@@ -17,7 +17,6 @@ export default class StreamingPlayer implements IStreamingPlayer {
         this._player.createStandartFilters();
     }
 
-    //REFACTORING!! Use generators
     public downloadSound = async (url: string) => {
         this._isCancel = false;
         // @ts-ignore
@@ -30,20 +29,36 @@ export default class StreamingPlayer implements IStreamingPlayer {
             }
             const { value, done } = await reader.read();
             value && value.buffer && this._bufferFifo.push(value.buffer);
-    
             if (done) return;
             
             readBuffer();
         }
         readBuffer();
-        
+
     }
 
-    public play = () => this._player.play();
+    public play = async () => {
+        const data = this._bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0));
+        await this._player.setData(data)
+        this._player.play();
+        this.setData();
+    }
 
-    public stop = () => this._player.stop();
+    public stop = () => {
+        clearInterval(this.setData())
+        this._player.stop();
+    }
+
+    public pause = () => this._player.pause();
 
     public cancelDownloadSound = () => this._isCancel = true;
+
+    private setData = () => setInterval(async () => {
+        const data = this._bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0));
+        await this._player.setData(data);
+        this._player.pause();
+        this._player.play();
+    }, 1000);
 
     public createFilter = (option: IOptions) => this._player.createFilter(option);
 

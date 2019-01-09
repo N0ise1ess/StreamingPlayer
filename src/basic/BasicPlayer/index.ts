@@ -19,6 +19,8 @@ export default class BasicPlayer implements IPlayer {
      */
     constructor(context: AudioContext) {
         this._context = context;
+        this._gainNode = this._context.createGain();
+        this._gainNode.connect(this._context.destination);
     }
 
     /**
@@ -68,20 +70,14 @@ export default class BasicPlayer implements IPlayer {
         }
     }
 
-    protected initSource() {
-        this._gainNode = this._context.createGain();
+    protected async initSource() {
         this._source =  this._context.createBufferSource();
         this._source.connect(this._gainNode);
-        this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
         this.changeVolume(this._volume);
-
-        if (!this._source.start) this._source.start = this._source.noteOn;
     }
 
     private stopTrack = () => {
-        if (!this._source.stop) this._source.stop = this._source.noteOff;
-        
         this._source.stop(0);
     }
 
@@ -89,15 +85,8 @@ export default class BasicPlayer implements IPlayer {
      * @param data Audio content
      */
     public async setData(data: ArrayBuffer) {
-        this._buffer = await new Buffer(this._context, data).getBuffer();
+        this._buffer = await this._context.decodeAudioData(data, (buffer:any) => buffer);
     }    
-    
-    /**
-     * @param value Type filter
-     */
-    // public set TypeFilter(value: BiquadFilterType) {
-    //     if(typeof this._filter.type === 'string') this._filter.type = value;
-    // }
 
     /**
      * @param value set context

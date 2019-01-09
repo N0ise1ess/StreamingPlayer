@@ -12,7 +12,7 @@ export default class Player extends BasicPlayer implements IPlayer {
         super(context);
     }
 
-    protected initSource() {
+    protected async initSource() {
         super.initSource();
         this._filters.forEach(filter => {
             filter.Filter.connect(this._context.destination);
