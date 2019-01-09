@@ -1,4 +1,3 @@
-import Buffer from '../Buffer';
 import IPlayer from './IPlayer';
 
 export default class BasicPlayer implements IPlayer {
@@ -10,6 +9,7 @@ export default class BasicPlayer implements IPlayer {
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
     private _volume = 100 as number;
+    private _isPlayed = false as boolean;
 
     private MAX_VALUE_VOLUME = 200;
 
@@ -28,10 +28,12 @@ export default class BasicPlayer implements IPlayer {
      */
     public play(value?: number) {
         try {
-            this.initSource();
-            this._startedAt = Date.now() - this._pausedAt;
-            if(value) this._startedAt -= value;    
-            this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
+            if(!this._isPlayed) {
+                this.initSource();
+                this._startedAt = Date.now() - this._pausedAt;
+                if(value) this._startedAt -= value;    
+                this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
+            } else throw new Error('Уже проигрывает музыку!');
         } catch(e) {
             throw new Error(e);
         }
@@ -79,6 +81,7 @@ export default class BasicPlayer implements IPlayer {
     }
 
     private stopTrack = () => {
+        this._isPlayed = false;
         this._source.stop(0);
     }
 

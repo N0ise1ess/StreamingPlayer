@@ -5,3 +5,10 @@ export interface IStreamingPlayer {
     createFilter(option: IOptions): any;
     downloadSound(url: string): Promise<void>;
 }
+
+export interface IStatePlayer {
+    bufferFifo: ArrayBuffer[];
+    isCancel: boolean;
+    isPlayed: boolean;
+    isDownloadingDone: boolean;
+}
