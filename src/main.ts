@@ -1,3 +1,3 @@
-import Main from "./MainPlayer";
+import StreamingPlayer from "./streamingPlayer";
 
-export default Main;
+export default StreamingPlayer;

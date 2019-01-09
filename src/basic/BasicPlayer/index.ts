@@ -1,7 +1,6 @@
-import Buffer from '../Buffer';
 import IPlayer from './IPlayer';
 
-export default class Player implements IPlayer {
+export default class BasicPlayer implements IPlayer {
     protected  _context: AudioContext;
     protected _source: any;
 
@@ -10,6 +9,7 @@ export default class Player implements IPlayer {
     private _pausedAt = 0 as any;
     private _startedAt = 0 as any;
     private _volume = 100 as number;
+    private _isPlayed = false as boolean;
 
     private MAX_VALUE_VOLUME = 200;
 
@@ -19,6 +19,8 @@ export default class Player implements IPlayer {
      */
     constructor(context: AudioContext) {
         this._context = context;
+        this._gainNode = this._context.createGain();
+        this._gainNode.connect(this._context.destination);
     }
 
     /**
@@ -26,9 +28,12 @@ export default class Player implements IPlayer {
      */
     public play(value?: number) {
         try {
-            this.initSource();
-            this._startedAt = Date.now() - this._pausedAt;
-            this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
+            if(!this._isPlayed) {
+                this.initSource();
+                this._startedAt = Date.now() - this._pausedAt;
+                if(value) this._startedAt -= value;    
+                this._pausedAt === 0 ? this._source.start(0) : this._source.start(0, this._pausedAt / 1000);
+            } else throw new Error('Уже проигрывает музыку!');
         } catch(e) {
             throw new Error(e);
         }
@@ -68,20 +73,15 @@ export default class Player implements IPlayer {
         }
     }
 
-    protected initSource() {
-        this._gainNode = this._context.createGain();
+    protected async initSource() {
         this._source =  this._context.createBufferSource();
         this._source.connect(this._gainNode);
-        this._gainNode.connect(this._context.destination)
         this._source.buffer = this._buffer;
         this.changeVolume(this._volume);
-
-        if (!this._source.start) this._source.start = this._source.noteOn;
     }
 
     private stopTrack = () => {
-        if (!this._source.stop) this._source.stop = this._source.noteOff;
-        
+        this._isPlayed = false;
         this._source.stop(0);
     }
 
@@ -89,15 +89,8 @@ export default class Player implements IPlayer {
      * @param data Audio content
      */
     public async setData(data: ArrayBuffer) {
-        this._buffer = await new Buffer(this._context, data).getBuffer();
+        this._buffer = await this._context.decodeAudioData(data, (buffer:any) => buffer);
     }    
-    
-    /**
-     * @param value Type filter
-     */
-    // public set TypeFilter(value: BiquadFilterType) {
-    //     if(typeof this._filter.type === 'string') this._filter.type = value;
-    // }
 
     /**
      * @param value set context

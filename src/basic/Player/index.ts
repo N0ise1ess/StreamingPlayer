@@ -1,10 +1,10 @@
-import Player from '../Player';
+import BasicPlayer from '../BasicPlayer';
 import Filter from '../Filter';
-import IMain from './IMain';
+import IPlayer from './IPlayer';
 import configStandartFilters from './configStandartFilters';
 import IFilter, { IOptions } from '../Filter/IFilter';
 
-export default class MainPlayer extends Player implements IMain {
+export default class Player extends BasicPlayer implements IPlayer {
 
     private _filters = [] as IFilter[];
 
@@ -12,7 +12,7 @@ export default class MainPlayer extends Player implements IMain {
         super(context);
     }
 
-    protected initSource() {
+    protected async initSource() {
         super.initSource();
         this._filters.forEach(filter => {
             filter.Filter.connect(this._context.destination);
