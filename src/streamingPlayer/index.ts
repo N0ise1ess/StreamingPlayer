@@ -2,12 +2,12 @@ import { IStreamingPlayer } from "./IStreamingPlayer";
 import Player from "../basic/Player";
 import IPlayer from "../basic/Player/IPlayer";
 import { IOptions } from "../basic/Filter/IFilter";
-import fetch from 'isomorphic-fetch'
 import concat from "../untils/concat";
 
 export default class StreamingPlayer implements IStreamingPlayer {
     private _player = {} as IPlayer;
     private _isCancel = false as Boolean;
+    private _bufferFifo = [] as ArrayBuffer[];
 
     constructor(context: AudioContext) {
         this._player = new Player(context);
@@ -20,46 +20,16 @@ export default class StreamingPlayer implements IStreamingPlayer {
     //REFACTORING!! Use generators
     public downloadSound = async (url: string) => {
         this._isCancel = false;
+        // @ts-ignore
         const res = await fetch(url);
-        let rest: any = null;
-        let isFirstBuffer = true;
         const reader = res.body.getReader();
-        let oldBuffer: ArrayBuffer;
-        const readBuffer = async () => {
-            const setBuffer = () => {
-                let buffer = rest === null ? value.buffer : concat(rest, value.buffer);
-                if (isFirstBuffer) {
-                    if(buffer.byteLength <= 44) {
-                        rest = buffer;
-                        readBuffer();
-                        return;
-                    }
-                    buffer = buffer.slice(44);
-                }
-                if (buffer.byteLength % 2 === 0) {
-                    rest = null;
-                } else {
-                    rest = buffer.slice(-2, -1);
-                    buffer = buffer.slice(0, -1);
-                }
-                
-                if(isFirstBuffer) {
-                    oldBuffer = buffer;
-                    this._player.setData(buffer);
-                } else {
-                    oldBuffer = concat(oldBuffer, buffer);
-                    console.log(oldBuffer)
-                    this._player.setData(oldBuffer);
-                }
-                isFirstBuffer = false;
-            }
-            
+        const readBuffer = async () => {            
             if(this._isCancel) {
                 reader.cancel();
                 return;
             }
             const { value, done } = await reader.read();
-            value && value.buffer && setBuffer();
+            value && value.buffer && this._bufferFifo.push(value.buffer);
     
             if (done) return;
             
