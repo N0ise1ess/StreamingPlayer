@@ -11,6 +11,7 @@ export default class StreamingPlayer implements IStreamingPlayer {
         isCancel: false,
         isPlayed: false,
         isDownloadingDone: false,
+        isSetDataDone: false,
     } as IStatePlayer;
     private setDataWithInterval: any;
 
@@ -50,11 +51,17 @@ export default class StreamingPlayer implements IStreamingPlayer {
         await this.setData();
         this._player.play();
         this.setDataWithInterval = setInterval(async () => {
+            if(this._state.isSetDataDone) {
+                clearInterval(this.setDataWithInterval);
+                return;
+            }
             await this.setData();
             this._player.pause();
             this._state.isPlayed && this._player.play(0.7);
-            this._state.isDownloadingDone && clearInterval(this.setDataWithInterval);
-            console.log('TEST')
+            if(this._state.isDownloadingDone) {
+                this._state.isSetDataDone = true;
+                clearInterval(this.setDataWithInterval);
+            }
         }, 1000);
     }
 
