@@ -27,6 +27,8 @@ export default class StreamingPlayer implements IStreamingPlayer {
         this._player.createStandartFilters();
     }
 
+    public createFilter = (option: IOptions) => this._player.createFilter(option);
+
     /**
      * 
      * @param url URL sound
@@ -86,8 +88,6 @@ export default class StreamingPlayer implements IStreamingPlayer {
     public cancelDownloadSound = () => this._state.isCancel = true;
 
     private setData = async () => await this._player.setData(this._state.bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0)));
-
-    public createFilter = (option: IOptions) => this._player.createFilter(option);
 
     /**
      * 
