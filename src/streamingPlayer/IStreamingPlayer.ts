@@ -11,4 +11,5 @@ export interface IStatePlayer {
     isCancel: boolean;
     isPlayed: boolean;
     isDownloadingDone: boolean;
+    isSetDataDone: boolean;
 }

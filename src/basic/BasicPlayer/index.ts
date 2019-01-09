@@ -88,9 +88,7 @@ export default class BasicPlayer implements IPlayer {
     /**
      * @param data Audio content
      */
-    public async setData(data: ArrayBuffer) {
-        this._buffer = await this._context.decodeAudioData(data, (buffer:any) => buffer);
-    }    
+    public setData = async (data: ArrayBuffer) => this._buffer = await this._context.decodeAudioData(data, (buffer:any) => buffer);
 
     /**
      * @param value set context

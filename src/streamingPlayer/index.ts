@@ -11,9 +11,14 @@ export default class StreamingPlayer implements IStreamingPlayer {
         isCancel: false,
         isPlayed: false,
         isDownloadingDone: false,
+        isSetDataDone: false,
     } as IStatePlayer;
     private setDataWithInterval: any;
 
+    /**
+     * 
+     * @param context AudioContext | webkitAudioContext
+     */
     constructor(context: AudioContext) {
         this._player = new Player(context);
     }
@@ -22,6 +27,12 @@ export default class StreamingPlayer implements IStreamingPlayer {
         this._player.createStandartFilters();
     }
 
+    public createFilter = (option: IOptions) => this._player.createFilter(option);
+
+    /**
+     * 
+     * @param url URL sound
+     */
     public downloadSound = async (url: string) => {
         this._state.isDownloadingDone = false;
         this._state.isCancel = false;
@@ -45,16 +56,22 @@ export default class StreamingPlayer implements IStreamingPlayer {
 
     }
 
-    public play = async () => {
+    public play = async (value?: number) => {
         this._state.isPlayed = true;
         await this.setData();
-        this._player.play();
+        this._player.play(value);
         this.setDataWithInterval = setInterval(async () => {
+            if(this._state.isSetDataDone) {
+                clearInterval(this.setDataWithInterval);
+                return;
+            }
             await this.setData();
             this._player.pause();
             this._state.isPlayed && this._player.play(0.7);
-            this._state.isDownloadingDone && clearInterval(this.setDataWithInterval);
-            console.log('TEST')
+            if(this._state.isDownloadingDone) {
+                this._state.isSetDataDone = true;
+                clearInterval(this.setDataWithInterval);
+            }
         }, 1000);
     }
 
@@ -70,15 +87,45 @@ export default class StreamingPlayer implements IStreamingPlayer {
 
     public cancelDownloadSound = () => this._state.isCancel = true;
 
-    private setData = async () => {
-        const data = this._state.bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0));
-        return await this._player.setData(data);
+    private setData = async () => await this._player.setData(this._state.bufferFifo.reduce((accumulator, currentValue) => concat(accumulator, currentValue), new ArrayBuffer(0)));
+
+    /**
+     * 
+     * @param value seconds
+     */
+    public changeTime(value: string) {
+        this._player.changeTime(value);
     }
 
-    public createFilter = (option: IOptions) => this._player.createFilter(option);
+    /**
+     *  @param value 0-200 
+     */
+    public changeVolume = (value: number = 100) => {
+        this._player.changeVolume();
+    }
 
     public get Filters() {
         return this._player.Filters;
+    }
+
+    public get Context() {
+        return this._player.Context;
+    }
+
+    public get Buffer():AudioBuffer {
+        return this._player.Buffer;
+    }
+
+    public get Source(): any {
+        return this._player.Source;
+    }
+
+    public get CurrentTimeBuffer(): number {
+        return this._player.CurrentTimeBuffer;
+    }
+
+    public get DurationBuffer(): number {
+        return this._player.DurationBuffer;
     }
 
 }
